@@ -5,6 +5,7 @@ interface GenerationResult {
   readme: string;
   howto: string;
   spec: string;
+  prompts: string;
   gemini_prompt: string;
 }
 
@@ -109,6 +110,7 @@ JSON Schema:
   "readme": "string (Markdown format)",
   "howto": "string (Markdown format)",
 "spec": "string (Markdown format)",
+"prompts": "string (Markdown format)",
   "gemini_prompt": "string"
 }
 
@@ -148,6 +150,7 @@ If package scripts or commands are needed, create them."
 추가 지침:
 - 최소 기능 제품(MVP)부터 시작하라고 명시
 - 과잉 엔지니어링을 하지 말고 불필요한 기능을 추가하지 말라고 명시
+
 - 차단 요인이 되는 요구사항이 불명확할 때만 질문하라고 명시`;
 
       const promptText = `
@@ -266,6 +269,7 @@ If package scripts or commands are needed, create them."
     handleDownloadFile(result.readme, 'README.md');
     handleDownloadFile(result.howto, 'HOWTO.md');
     if (result.spec) handleDownloadFile(result.spec, 'SPEC.md');
+    if (result.prompts) handleDownloadFile(result.prompts, 'PROMPTS.md');
     handleDownloadFile(result.gemini_prompt, 'gemini_prompt.txt');
   };
 
@@ -518,6 +522,37 @@ If package scripts or commands are needed, create them."
           rows={12}
         />
       </section>
+
+      <section className="result-section">
+        <div className="section-header">
+          <h3>PROMPTS.md</h3>
+
+          <div className="button-group">
+            <button
+              className="copy-btn"
+              onClick={() => handleCopy(result.prompts, setCopyStatusPrompt)}
+            >
+              {copyStatusPrompt}
+            </button>
+
+            <button
+              className="download-btn"
+              onClick={() => handleDownloadFile(result.prompts, 'PROMPTS.md')}
+            >
+              다운로드
+            </button>
+          </div>
+        </div>
+
+        <textarea
+          className="output-area"
+          readOnly
+          value={result.prompts}
+          rows={12}
+        />
+      </section>
+
+
 
           <section className="result-section">
               <div className="section-header">
