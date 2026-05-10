@@ -264,20 +264,27 @@ If package scripts or commands are needed, create them."
     URL.revokeObjectURL(url);
   };
 
-  const handleDownloadAll = () => {
+  const handleDownloadAll = async () => {
     if (!result) return;
 
+    const files = [
+      { content: result.readme, filename: 'README.md' },
+      { content: result.howto, filename: 'HOWTO.md' },
+      ...(result.spec ? [{ content: result.spec, filename: 'SPEC.md' }] : []),
+      ...(result.prompts ? [{ content: result.prompts, filename: 'PROMPTS.md' }] : []),
+      { content: result.gemini_prompt, filename: 'gemini_prompt.txt' },
+    ];
+
     const ok = window.confirm(
-      '여러 파일을 개별 다운로드합니다. 브라우저에서 여러 파일 다운로드 허용을 물어보면 허용해주세요.'
+      `${files.length}개 파일을 순차 다운로드합니다. 브라우저가 허용을 물어보면 허용해주세요.`
     );
 
     if (!ok) return;
 
-    handleDownloadFile(result.readme, 'README.md');
-    handleDownloadFile(result.howto, 'HOWTO.md');
-    if (result.spec) handleDownloadFile(result.spec, 'SPEC.md');
-    if (result.prompts) handleDownloadFile(result.prompts, 'PROMPTS.md');
-    handleDownloadFile(result.gemini_prompt, 'gemini_prompt.txt');
+    for (const file of files) {
+      handleDownloadFile(file.content, file.filename);
+      await new Promise((resolve) => setTimeout(resolve, 700));
+    }
   };
 
   return (
