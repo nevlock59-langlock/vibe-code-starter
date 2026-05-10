@@ -302,7 +302,7 @@ textarea {
 }
 
 .section-header {
-  border-left: 5px solid #b044ff;
+  border-left: 5px solid #7c5caa;
   padding-left: 12px;
   margin-bottom: 6px;
 }
@@ -675,7 +675,7 @@ header p {
 /* Fix result section header layout */
 .result-section .section-header {
   display: block !important;
-  border-left: 5px solid #b044ff !important;
+  border-left: 5px solid #7c5caa !important;
   padding-left: 14px !important;
   margin-bottom: 12px !important;
 }
@@ -707,7 +707,7 @@ header p {
   align-items: center !important;
   justify-content: space-between !important;
   gap: 8px !important;
-  border-left: 5px solid #b044ff !important;
+  border-left: 5px solid #7c5caa !important;
   padding-left: 14px !important;
   margin-bottom: 12px !important;
 }
@@ -754,7 +754,7 @@ header p {
   width: 5px !important;
   height: 42px !important;
   border-radius: 999px !important;
-  background: #b044ff !important;
+  background: #7c5caa !important;
 }
 
 .result-section .section-header {
@@ -814,7 +814,7 @@ body .container .result-area section.result-section::before {
   top: 0 !important;
   width: 5px !important;
   height: 44px !important;
-  background: #b044ff !important;
+  background: #7c5caa !important;
   border-radius: 999px !important;
 }
 
@@ -862,5 +862,41 @@ body .container .result-area section.result-section .download-btn {
 body .container .result-area section.result-section textarea.output-area {
   width: 100% !important;
   margin: 0 !important;
+}
+
+
+/* More compact output text boxes */
+.result-section .output-area {
+  height: 80px !important;
+  min-height: 80px !important;
+  max-height: 80px !important;
+}
+
+
+/* Softer accent override */
+.logo,
+.app-logo,
+header h1,
+.generate-btn {
+  background: linear-gradient(135deg, #7c5caa, #5f6f9f) !important;
+}
+
+.generate-btn,
+button[type="submit"] {
+  background: linear-gradient(135deg, #7c5caa, #5f6f9f) !important;
+  box-shadow: 0 10px 24px rgba(124, 92, 170, 0.22) !important;
+}
+
+.result-section::before {
+  background: #7c5caa !important;
+}
+
+
+/* Fix logo: text color only, no background bar */
+header h1 {
+  background: none !important;
+  background-color: transparent !important;
+  color: #7c5caa !important;
+  -webkit-text-fill-color: #7c5caa !important;
 }
 
