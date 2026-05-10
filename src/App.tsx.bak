@@ -4,7 +4,6 @@ import './App.css';
 interface GenerationResult {
   readme: string;
   howto: string;
-  spec: string;
   gemini_prompt: string;
 }
 
@@ -48,7 +47,6 @@ JSON Schema:
 {
   "readme": "string (Markdown format)",
   "howto": "string (Markdown format)",
-"spec": "string (Markdown format)",
   "gemini_prompt": "string"
 }
 
@@ -80,7 +78,7 @@ HOWTO.md 구성 요소 및 요구사항:
 
 Gemini CLI 프롬프트 지침:
 반드시 다음 내용을 포함하세요:
-"Read README.md, HOWTO.md, and SPEC.md carefully before coding.
+"Read README.md and HOWTO.md carefully before coding.
 Implement the project according to README.md.
 Make sure the project can be installed, run, built, and tested according to HOWTO.md.
 If package scripts or commands are needed, create them."
@@ -167,7 +165,6 @@ If package scripts or commands are needed, create them."
     if (!result) return;
     handleDownloadFile(result.readme, 'README.md');
     handleDownloadFile(result.howto, 'HOWTO.md');
-    if (result.spec) handleDownloadFile(result.spec, 'SPEC.md');
     handleDownloadFile(result.gemini_prompt, 'gemini_prompt.txt');
   };
 
@@ -300,26 +297,6 @@ If package scripts or commands are needed, create them."
                 value={result.howto}
                 rows={12}
               />
-
-      <div className="output-group">
-        <div className="output-header">
-          <span>SPEC.md</span>
-          <button
-            className="download-btn"
-            onClick={() => handleDownloadFile(result.spec, 'SPEC.md')}
-          >
-            다운로드
-          </button>
-        </div>
-
-        <textarea
-          className="output-textarea"
-          readOnly
-          value={result.spec}
-        />
-      </div>
-
-
             </section>
 
             <section className="result-section">
@@ -356,4 +333,3 @@ If package scripts or commands are needed, create them."
 }
 
 export default App;
-

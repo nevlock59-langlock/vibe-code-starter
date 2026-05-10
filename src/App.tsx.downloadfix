@@ -169,6 +169,9 @@ If package scripts or commands are needed, create them."
     handleDownloadFile(result.howto, 'HOWTO.md');
     if (result.spec) handleDownloadFile(result.spec, 'SPEC.md');
     handleDownloadFile(result.gemini_prompt, 'gemini_prompt.txt');
+    handleDownloadFile(result.howto, 'HOWTO.md');
+    handleDownloadFile(result.spec, 'SPEC.md');
+    handleDownloadFile(result.gemini_prompt, 'gemini_prompt.txt');
   };
 
   return (
@@ -300,26 +303,6 @@ If package scripts or commands are needed, create them."
                 value={result.howto}
                 rows={12}
               />
-
-      <div className="output-group">
-        <div className="output-header">
-          <span>SPEC.md</span>
-          <button
-            className="download-btn"
-            onClick={() => handleDownloadFile(result.spec, 'SPEC.md')}
-          >
-            다운로드
-          </button>
-        </div>
-
-        <textarea
-          className="output-textarea"
-          readOnly
-          value={result.spec}
-        />
-      </div>
-
-
             </section>
 
             <section className="result-section">

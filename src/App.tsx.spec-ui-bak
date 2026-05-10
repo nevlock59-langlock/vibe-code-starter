@@ -48,7 +48,6 @@ JSON Schema:
 {
   "readme": "string (Markdown format)",
   "howto": "string (Markdown format)",
-"spec": "string (Markdown format)",
   "gemini_prompt": "string"
 }
 
@@ -167,7 +166,7 @@ If package scripts or commands are needed, create them."
     if (!result) return;
     handleDownloadFile(result.readme, 'README.md');
     handleDownloadFile(result.howto, 'HOWTO.md');
-    if (result.spec) handleDownloadFile(result.spec, 'SPEC.md');
+    handleDownloadFile(result.spec, 'SPEC.md');
     handleDownloadFile(result.gemini_prompt, 'gemini_prompt.txt');
   };
 
@@ -300,26 +299,6 @@ If package scripts or commands are needed, create them."
                 value={result.howto}
                 rows={12}
               />
-
-      <div className="output-group">
-        <div className="output-header">
-          <span>SPEC.md</span>
-          <button
-            className="download-btn"
-            onClick={() => handleDownloadFile(result.spec, 'SPEC.md')}
-          >
-            다운로드
-          </button>
-        </div>
-
-        <textarea
-          className="output-textarea"
-          readOnly
-          value={result.spec}
-        />
-      </div>
-
-
             </section>
 
             <section className="result-section">
@@ -356,4 +335,3 @@ If package scripts or commands are needed, create them."
 }
 
 export default App;
-
