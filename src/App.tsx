@@ -148,8 +148,8 @@ Make sure the project can be installed, run, built, and tested according to HOWT
 If package scripts or commands are needed, create them."
 
 추가 지침:
-- 최소 기능 제품(MVP)부터 시작하라고 명시
-- 과잉 엔지니어링을 하지 말고 불필요한 기능을 추가하지 말라고 명시
+- MVP는 핵심 사용자 가치를 유지한 최소 경험 단위라고 명시
+- 과잉 엔지니어링은 피하되 단순 CRUD 수준으로 과도하게 다운스코프하지 말라고 명시
 
 - 차단 요인이 되는 요구사항이 불명확할 때만 질문하라고 명시`;
 
