@@ -1,0 +1,335 @@
+import { useState } from 'react';
+import './App.css';
+
+interface GenerationResult {
+  readme: string;
+  howto: string;
+  gemini_prompt: string;
+}
+
+function App() {
+  const [apiKey, setApiKey] = useState('');
+  const [projectIdea, setProjectIdea] = useState('');
+  const [targetPlatform, setTargetPlatform] = useState('Web');
+  const [preferredStyle, setPreferredStyle] = useState('');
+  const [mustHaveFeatures, setMustHaveFeatures] = useState('');
+  const [thingsToAvoid, setThingsToAvoid] = useState('');
+  
+  const [result, setResult] = useState<GenerationResult | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [copyStatusReadme, setCopyStatusReadme] = useState('복사');
+  const [copyStatusHowto, setCopyStatusHowto] = useState('복사');
+  const [copyStatusPrompt, setCopyStatusPrompt] = useState('복사');
+
+  const handleGenerate = async () => {
+    if (!apiKey) {
+      setError('API 키를 입력해주세요.');
+      return;
+    }
+    if (!projectIdea) {
+      setError('프로젝트 아이디어를 입력해주세요.');
+      return;
+    }
+
+    setIsLoading(true);
+    setError('');
+    setResult(null);
+
+    try {
+      const apiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+      
+      const systemInstruction = `당신은 실용적인 소프트웨어 아키텍트입니다. 사용자의 프로젝트 아이디어를 바탕으로 README.md, HOWTO.md, 그리고 Gemini CLI 전용 시작 프롬프트를 생성해야 합니다.
+모든 내용은 한국어로 작성하세요. (단, 코드 명령어나 설정 파일 이름 등은 영어로 유지)
+반드시 아래 스키마를 따르는 JSON 형식으로만 답변하세요.
+
+JSON Schema:
+{
+  "readme": "string (Markdown format)",
+  "howto": "string (Markdown format)",
+  "gemini_prompt": "string"
+}
+
+README.md 구성 요소:
+# Project Brief
+## Goal
+## Target User
+## Core Features
+## Screen / UX Requirements
+## Technical Requirements
+## Implementation Steps
+## Constraints
+## Definition of Done
+
+HOWTO.md 구성 요소 및 요구사항:
+# HOWTO
+## Prerequisites
+## Project Setup
+## Install
+## Run Locally
+## Build
+## Deploy
+## Troubleshooting
+
+대상 플랫폼별 HOWTO.md 가이드라인:
+- Web / Mobile Web: Vite 사용, npm run dev (개발), npm run build (빌드), Vercel 배포 안내
+- Python Script: python 파일 직접 실행, venv (선택), pip install (필요시) 안내
+- Streamlit: streamlit run app.py 안내
+
+Gemini CLI 프롬프트 지침:
+반드시 다음 내용을 포함하세요:
+"Read README.md and HOWTO.md carefully before coding.
+Implement the project according to README.md.
+Make sure the project can be installed, run, built, and tested according to HOWTO.md.
+If package scripts or commands are needed, create them."
+
+추가 지침:
+- 최소 기능 제품(MVP)부터 시작하라고 명시
+- 과잉 엔지니어링을 하지 말고 불필요한 기능을 추가하지 말라고 명시
+- 차단 요인이 되는 요구사항이 불명확할 때만 질문하라고 명시`;
+
+      const promptText = `
+프로젝트 아이디어: ${projectIdea}
+대상 플랫폼: ${targetPlatform}
+선호하는 스타일: ${preferredStyle || '기본'}
+필수 기능: ${mustHaveFeatures || '없음'}
+피해야 할 사항: ${thingsToAvoid || '없음'}
+`;
+
+      const res = await fetch(apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: `${systemInstruction}\n\n입력 정보:\n${promptText}`,
+                },
+              ],
+            },
+          ],
+          generationConfig: {
+            response_mime_type: "application/json"
+          }
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error?.message || 'Gemini API 호출에 실패했습니다.');
+      }
+
+      const data = await res.json();
+      const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+      
+      if (!resultText) {
+        throw new Error('Gemini로부터 응답을 받지 못했습니다.');
+      }
+
+      try {
+        const parsed = JSON.parse(resultText) as GenerationResult;
+        setResult(parsed);
+      } catch (parseErr) {
+        console.error('Failed to parse JSON:', resultText);
+        setError('구조화된 응답을 파싱하는 데 실패했습니다.');
+      }
+    } catch (err: any) {
+      setError(err.message || '알 수 없는 오류가 발생했습니다.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCopy = (text: string, setStatus: (s: string) => void) => {
+    navigator.clipboard.writeText(text);
+    setStatus('복사됨!');
+    setTimeout(() => setStatus('복사'), 2000);
+  };
+
+  const handleDownloadFile = (content: string, filename: string) => {
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleDownloadAll = () => {
+    if (!result) return;
+    handleDownloadFile(result.readme, 'README.md');
+    handleDownloadFile(result.howto, 'HOWTO.md');
+    handleDownloadFile(result.gemini_prompt, 'gemini_prompt.txt');
+  };
+
+  return (
+    <div className="container">
+      <header>
+        <h1>Vibe Code Starter</h1>
+        <p>아이디어를 실제 코드로 바꾸는 가장 빠른 방법</p>
+      </header>
+
+      <main className="form-section">
+        <div className="input-group">
+          <label htmlFor="api-key">Gemini API 키</label>
+          <input
+            id="api-key"
+            type="password"
+            placeholder="API 키를 입력하세요 (메모리에만 유지)"
+            value={apiKey}
+            onChange={(e) => setApiKey(e.target.value)}
+          />
+        </div>
+
+        <div className="input-group">
+          <label htmlFor="project-idea">프로젝트 아이디어 (무엇을 만들고 싶나요?)</label>
+          <textarea
+            id="project-idea"
+            rows={4}
+            placeholder="예: 할 일 관리 앱, 포트폴리오 사이트..."
+            value={projectIdea}
+            onChange={(e) => setProjectIdea(e.target.value)}
+          ></textarea>
+        </div>
+
+        <div className="input-row">
+          <div className="input-group">
+            <label htmlFor="target-platform">대상 플랫폼</label>
+            <select 
+              id="target-platform" 
+              value={targetPlatform} 
+              onChange={(e) => setTargetPlatform(e.target.value)}
+            >
+              <option value="Web">Web</option>
+              <option value="Mobile Web">Mobile Web</option>
+              <option value="Python Script">Python Script</option>
+              <option value="Streamlit">Streamlit</option>
+            </select>
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="preferred-style">선호하는 스타일 (분위기, 색상 등)</label>
+            <input
+              id="preferred-style"
+              type="text"
+              placeholder="예: 미니멀한, 어두운 테마..."
+              value={preferredStyle}
+              onChange={(e) => setPreferredStyle(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="input-group">
+          <label htmlFor="must-have">꼭 포함되어야 할 기능</label>
+          <textarea
+            id="must-have"
+            rows={3}
+            placeholder="예: 구글 로그인, 다크모드 지원..."
+            value={mustHaveFeatures}
+            onChange={(e) => setMustHaveFeatures(e.target.value)}
+          ></textarea>
+        </div>
+
+        <div className="input-group">
+          <label htmlFor="to-avoid">피해야 할 것 / 사용하지 말 것</label>
+          <textarea
+            id="to-avoid"
+            rows={2}
+            placeholder="예: Redux 사용 금지, 외부 이미지 API 사용 지양..."
+            value={thingsToAvoid}
+            onChange={(e) => setThingsToAvoid(e.target.value)}
+          ></textarea>
+        </div>
+
+        <button 
+          className="generate-btn" 
+          onClick={handleGenerate} 
+          disabled={isLoading}
+        >
+          {isLoading ? '생성 중...' : '스타터 가이드 생성하기'}
+        </button>
+
+        {error && <div className="error-message">{error}</div>}
+
+        {result && (
+          <div className="result-area">
+            <section className="result-section">
+              <div className="section-header">
+                <h3>README.md</h3>
+                <div className="button-group">
+                  <button className="copy-btn" onClick={() => handleCopy(result.readme, setCopyStatusReadme)}>
+                    {copyStatusReadme}
+                  </button>
+                  <button className="download-btn" onClick={() => handleDownloadFile(result.readme, 'README.md')}>
+                    다운로드
+                  </button>
+                </div>
+              </div>
+              <textarea 
+                className="output-area" 
+                readOnly 
+                value={result.readme}
+                rows={12}
+              />
+            </section>
+
+            <section className="result-section">
+              <div className="section-header">
+                <h3>HOWTO.md</h3>
+                <div className="button-group">
+                  <button className="copy-btn" onClick={() => handleCopy(result.howto, setCopyStatusHowto)}>
+                    {copyStatusHowto}
+                  </button>
+                  <button className="download-btn" onClick={() => handleDownloadFile(result.howto, 'HOWTO.md')}>
+                    다운로드
+                  </button>
+                </div>
+              </div>
+              <textarea 
+                className="output-area" 
+                readOnly 
+                value={result.howto}
+                rows={12}
+              />
+            </section>
+
+            <section className="result-section">
+              <div className="section-header">
+                <h3>Gemini CLI 시작 프롬프트</h3>
+                <button className="copy-btn" onClick={() => handleCopy(result.gemini_prompt, setCopyStatusPrompt)}>
+                  {copyStatusPrompt}
+                </button>
+              </div>
+              <textarea 
+                className="output-area" 
+                readOnly 
+                value={result.gemini_prompt}
+                rows={8}
+              />
+            </section>
+
+            <button 
+              className="generate-btn" 
+              style={{ width: '100%', marginTop: '16px' }}
+              onClick={handleDownloadAll}
+            >
+              모든 파일 다운로드
+            </button>
+          </div>
+        )}
+      </main>
+
+      <footer>
+        <p>Vibe Code Starter - Fast Prototyping Guide</p>
+      </footer>
+    </div>
+  );
+}
+
+export default App;
