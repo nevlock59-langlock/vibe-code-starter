@@ -194,6 +194,13 @@ If package scripts or commands are needed, create them."
       try {
         const parsed = JSON.parse(extractJson(resultText)) as GenerationResult;
         setResult(parsed);
+
+      setTimeout(() => {
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: 'smooth'
+        });
+      }, 100);
       localStorage.setItem('vibe-code-starter-cache', JSON.stringify({
         projectIdea,
         preferredStyle,
