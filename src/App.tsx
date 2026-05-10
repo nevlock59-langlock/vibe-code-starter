@@ -327,6 +327,26 @@ If package scripts or commands are needed, create them."
                     <span className="project-desc">
                       {project.createdAt}
                     </span>
+              <span
+                className="project-delete-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+
+                  const nextProjects = savedProjects.filter(
+                    (p) => p.id !== project.id
+                  );
+
+                  setSavedProjects(nextProjects);
+
+                  localStorage.setItem(
+                    "vibe-project-list",
+                    JSON.stringify(nextProjects)
+                  );
+                }}
+              >
+                ×
+              </span>
+
                   </span>
                 </button>
               ))}
