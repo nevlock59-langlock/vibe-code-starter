@@ -13,7 +13,7 @@ header {
 }
 
 header h1 {
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   color: var(--accent);
 }
 
@@ -61,7 +61,7 @@ header h1 {
 }
 
 .generate-btn {
-  padding: 16px;
+  padding: 10px;
   background-color: var(--accent);
   color: #fff;
   border: none;
@@ -120,7 +120,7 @@ header h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 4px;
 }
 
 .button-group {
@@ -166,7 +166,7 @@ footer {
 
 @media (max-width: 600px) {
   .container {
-    padding: 16px;
+    padding: 8px;
   }
   
   .input-row {
@@ -174,7 +174,7 @@ footer {
   }
   
   .result-area {
-    padding: 16px;
+    padding: 10px;
   }
 
   .section-header {
@@ -188,3 +188,486 @@ footer {
     justify-content: flex-end;
   }
 }
+
+/* mobile tight layout override */
+@media (max-width: 600px) {
+  body {
+    padding: 0 !important;
+  }
+
+  #root {
+    width: 100% !important;
+  }
+
+  .container {
+    width: 100% !important;
+    max-width: none !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+  }
+
+  .input-card,
+  .result-section,
+  .card {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+}
+
+/* Clean mobile document-style layout */
+body {
+  background: #ffffff;
+}
+
+.container {
+  max-width: 520px !important;
+  margin: 0 auto !important;
+  padding: 18px 14px 40px !important;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+header h1 {
+  font-size: 30px;
+  line-height: 1.2;
+  letter-spacing: -0.04em;
+  margin-bottom: 4px;
+}
+
+header p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #6f6b7a;
+}
+
+.input-card,
+.result-area,
+.result-section {
+  background: #ffffff;
+  border: none;
+  box-shadow: none;
+  padding: 0 !important;
+}
+
+.input-group {
+  margin-bottom: 4px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 4px;
+  color: #111111;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1px solid #dedee6;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 9px 12px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #222222;
+}
+
+textarea {
+  min-height: 58px;
+  resize: vertical;
+}
+
+#to-avoid {
+  min-height: 36px !important;
+}
+
+.generate-btn {
+  width: 100%;
+  border-radius: 14px;
+  padding: 10px;
+  font-size: 17px;
+  font-weight: 800;
+  margin-top: 8px;
+}
+
+.result-section {
+  margin-top: 30px;
+}
+
+.section-header {
+  border-left: 5px solid #b044ff;
+  padding-left: 12px;
+  margin-bottom: 6px;
+}
+
+.section-header h3 {
+  font-size: 21px;
+  font-weight: 900;
+  margin: 0;
+}
+
+.button-group {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.copy-btn,
+.download-btn {
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-size: 14px;
+}
+
+.output-area {
+  min-height: 220px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 14px;
+  line-height: 1.65;
+  background: #ffffff;
+}
+
+@media (max-width: 600px) {
+  .container {
+    max-width: 100% !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  header h1 {
+    font-size: 28px;
+  }
+
+  input,
+  select,
+  textarea {
+    border-radius: 11px;
+  }
+}
+
+
+/* Prevent horizontal overflow on mobile */
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100% !important;
+  max-width: 520px !important;
+  overflow-x: hidden !important;
+}
+
+input,
+select,
+textarea,
+button {
+  max-width: 100% !important;
+}
+
+textarea,
+.output-area {
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.result-section,
+.input-group,
+.section-header,
+.button-group {
+  max-width: 100% !important;
+}
+
+
+/* Floating round menu button */
+.menu-fab {
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  z-index: 50;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid #e5e1ea;
+  background: #ffffff;
+  color: #222222;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+  padding: 0;
+}
+
+.menu-panel {
+  position: fixed;
+  top: 62px;
+  left: 14px;
+  z-index: 49;
+  width: 160px;
+  padding: 10px;
+  border: 1px solid #e5e1ea;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.14);
+}
+
+.menu-panel button {
+  width: 100%;
+  margin: 4px 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 0;
+  background: #f6f3fa;
+  color: #222222;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+
+/* Left side pane */
+.sidepane-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.sidepane {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 60;
+  width: min(82vw, 320px);
+  height: 100vh;
+  padding: 18px;
+  background: #ffffff;
+  border-right: 1px solid #eeeaf4;
+  box-shadow: 12px 0 36px rgba(0, 0, 0, 0.16);
+}
+
+.sidepane-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.sidepane-header button {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 0;
+  background: #f4f1f8;
+  color: #222;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.sidepane > button {
+  width: 100%;
+  margin: 6px 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 0;
+  background: #f7f4fb;
+  color: #222;
+  text-align: left;
+  font-weight: 700;
+}
+
+
+/* Project preview pills in sidepane */
+.project-section {
+  margin: 18px 0 20px;
+}
+
+.project-label {
+  font-size: 13px;
+  font-weight: 800;
+  color: #8a8294;
+  margin-bottom: 4px;
+  padding-left: 4px;
+}
+
+.project-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  margin: 8px 0;
+  padding: 12px 14px;
+  border-radius: 999px;
+  border: 1px solid #ebe6f3;
+  background: #faf8fd;
+  color: #222;
+  text-align: left;
+}
+
+.project-title {
+  font-size: 14px;
+  font-weight: 850;
+  line-height: 1.2;
+}
+
+.project-desc {
+  margin-top: 3px;
+  font-size: 12px;
+  color: #7b7484;
+  line-height: 1.2;
+}
+
+.project-pill:hover {
+  background: #f1ebfb;
+}
+
+
+.project-pill {
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 10px;
+  border-radius: 18px;
+}
+
+.project-icon {
+  font-size: 20px;
+  line-height: 1;
+  flex: 0 0 auto;
+}
+
+.project-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+
+.empty-projects {
+  margin: 10px 0 18px;
+  padding: 14px;
+  border-radius: 16px;
+  background: #f8f6fb;
+  color: #82798d;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+
+/* Compact form density override */
+.input-group {
+  margin-bottom: 4px !important;
+}
+
+.input-group label {
+  margin-bottom: 4px !important;
+  line-height: 1.2 !important;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+  padding: 8px 10px !important;
+  min-height: 40px !important;
+  line-height: 1.35 !important;
+}
+
+/* must-have + avoid fields: force one-line height */
+#must-have,
+#to-avoid {
+  min-height: 40px !important;
+  height: 40px !important;
+  rows: 1;
+}
+
+.generate-btn {
+  margin-top: 6px !important;
+}
+
+
+/* project idea: force two-line height */
+#project-idea {
+  min-height: 68px !important;
+  height: 68px !important;
+}
+
+
+/* Compact header */
+header {
+  margin-bottom: 10px !important;
+  padding-top: 4px !important;
+}
+
+header h1 {
+  font-size: 24px !important;
+  line-height: 1.15 !important;
+  margin: 0 0 4px !important;
+}
+
+header p {
+  font-size: 12px !important;
+  line-height: 1.35 !important;
+  margin: 0 !important;
+}
+
+
+/* Keep generate button above mobile browser bottom bar */
+.container {
+  padding-bottom: 96px !important;
+}
+
+.generate-btn {
+  margin-bottom: 24px !important;
+}
+
+
+/* Add breathing room around generate button */
+.generate-btn {
+  margin-top: 18px !important;
+  margin-bottom: 42px !important;
+}
+
+
+/* Bigger, safer generate button layout */
+.generate-btn {
+  min-height: 64px !important;
+  font-size: 20px !important;
+  border-radius: 18px !important;
+  margin-top: 22px !important;
+  margin-bottom: 90px !important;
+}
+
+.container {
+  padding-bottom: 120px !important;
+}
+
+
+/* project idea: six-line height */
+#project-idea {
+  min-height: 150px !important;
+  height: 150px !important;
+}
+
+
+/* project idea: four-line height */
+#project-idea {
+  min-height: 104px !important;
+  height: 104px !important;
+}
+

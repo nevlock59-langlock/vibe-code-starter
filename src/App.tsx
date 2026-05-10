@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 
 interface GenerationResult {
@@ -6,6 +6,36 @@ interface GenerationResult {
   howto: string;
   spec: string;
   gemini_prompt: string;
+}
+
+
+interface SavedProject {
+  id: string;
+  title: string;
+  createdAt: string;
+  projectIdea: string;
+  targetPlatform: string;
+  preferredStyle: string;
+  mustHaveFeatures: string;
+  thingsToAvoid: string;
+  result: GenerationResult;
+}
+
+
+function extractJson(text: string) {
+  const cleaned = text
+    .replace(/```json/g, "")
+    .replace(/```/g, "")
+    .trim();
+
+  const start = cleaned.indexOf("{");
+  const end = cleaned.lastIndexOf("}");
+
+  if (start === -1 || end === -1 || end <= start) {
+    throw new Error("JSON 객체를 찾지 못했습니다.");
+  }
+
+  return cleaned.slice(start, end + 1);
 }
 
 function App() {
@@ -16,7 +46,37 @@ function App() {
   const [mustHaveFeatures, setMustHaveFeatures] = useState('');
   const [thingsToAvoid, setThingsToAvoid] = useState('');
   
+  const [menuOpen, setMenuOpen] = useState(false);
   const [result, setResult] = useState<GenerationResult | null>(null);
+const [savedProjects, setSavedProjects] = useState<SavedProject[]>([]);
+
+
+  useEffect(() => {
+    const cached = localStorage.getItem('vibe-code-starter-cache');
+    if (!cached) return;
+
+    try {
+      const parsed = JSON.parse(cached);
+      if (parsed?.result) setResult(parsed.result);
+      if (parsed?.projectIdea) setProjectIdea(parsed.projectIdea);
+      if (parsed?.preferredStyle) setPreferredStyle(parsed.style);
+      if (parsed?.mustHaveFeaturesFeatures) setMustHaveFeatures(parsed.mustHave);
+      if (parsed?.thingsToAvoid) setThingsToAvoid(parsed.toAvoid);
+    } catch {
+      localStorage.removeItem('vibe-code-starter-cache');
+    }
+  }, []);
+  useEffect(() => {
+    const raw = localStorage.getItem("vibe-project-list");
+    if (!raw) return;
+
+    try {
+      setSavedProjects(JSON.parse(raw));
+    } catch {}
+  }, []);
+
+
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [copyStatusReadme, setCopyStatusReadme] = useState('복사');
@@ -132,8 +192,39 @@ If package scripts or commands are needed, create them."
       }
 
       try {
-        const parsed = JSON.parse(resultText) as GenerationResult;
+        const parsed = JSON.parse(extractJson(resultText)) as GenerationResult;
         setResult(parsed);
+      localStorage.setItem('vibe-code-starter-cache', JSON.stringify({
+        projectIdea,
+        preferredStyle,
+        mustHaveFeatures,
+        thingsToAvoid,
+        result: parsed
+      }));
+
+      const newProject: SavedProject = {
+        id: Date.now().toString(),
+        title: projectIdea.slice(0, 20) || "Untitled",
+        createdAt: new Date().toLocaleDateString(),
+        projectIdea,
+        targetPlatform,
+        preferredStyle,
+        mustHaveFeatures,
+        thingsToAvoid,
+        result: parsed
+      };
+
+      const updatedProjects = [
+        newProject,
+        ...savedProjects
+      ].slice(0, 3);
+
+      setSavedProjects(updatedProjects);
+
+      localStorage.setItem(
+        "vibe-project-list",
+        JSON.stringify(updatedProjects)
+      );
       } catch (parseErr) {
         console.error('Failed to parse JSON:', resultText);
         setError('구조화된 응답을 파싱하는 데 실패했습니다.');
@@ -173,6 +264,86 @@ If package scripts or commands are needed, create them."
 
   return (
     <div className="container">
+
+      <button
+        className="menu-fab"
+        type="button"
+        aria-label="메뉴 열기"
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        ☰
+      </button>
+
+      {menuOpen && (
+        <>
+          <div className="sidepane-backdrop" onClick={() => setMenuOpen(false)} />
+          <aside className="sidepane">
+            <div className="sidepane-header">
+              <strong>Vibe Code Starter</strong>
+              <button type="button" onClick={() => setMenuOpen(false)}>×</button>
+            </div>
+
+            <div className="project-section">
+              <div className="project-label">프로젝트</div>
+
+              
+              {savedProjects.length === 0 && (
+                <div className="empty-projects">
+                  아직 저장된 프로젝트가 없습니다.
+                  <br />
+                  스타터 가이드를 생성하면 여기에 저장됩니다.
+                </div>
+              )}
+
+{savedProjects.map((project) => (
+                <button
+                  key={project.id}
+                  type="button"
+                  className="project-pill"
+                  onClick={() => {
+                    setProjectIdea(project.projectIdea);
+                    setTargetPlatform(project.targetPlatform);
+                    setPreferredStyle(project.preferredStyle);
+                    setMustHaveFeatures(project.mustHaveFeatures);
+                    setThingsToAvoid(project.thingsToAvoid);
+                    setResult(project.result);
+                    setMenuOpen(false);
+                  }}
+                >
+                  <span className="project-icon">📁</span>
+
+                  <span className="project-text">
+                    <span className="project-title">
+                      {project.title}
+                    </span>
+
+                    <span className="project-desc">
+                      {project.createdAt}
+                    </span>
+                  </span>
+                </button>
+              ))}
+
+
+
+              
+
+              
+
+              
+            </div>
+
+            <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              맨 위로
+            </button>
+            <button type="button" onClick={() => setMenuOpen(false)}>
+              닫기
+            </button>
+          </aside>
+        </>
+      )}
+
+
       <header>
         <h1>Vibe Code Starter</h1>
         <p>아이디어를 실제 코드로 바꾸는 가장 빠른 방법</p>
@@ -215,17 +386,6 @@ If package scripts or commands are needed, create them."
               <option value="Streamlit">Streamlit</option>
             </select>
           </div>
-
-          <div className="input-group">
-            <label htmlFor="preferred-style">선호하는 스타일 (분위기, 색상 등)</label>
-            <input
-              id="preferred-style"
-              type="text"
-              placeholder="예: 미니멀한, 어두운 테마..."
-              value={preferredStyle}
-              onChange={(e) => setPreferredStyle(e.target.value)}
-            />
-          </div>
         </div>
 
         <div className="input-group">
@@ -243,8 +403,8 @@ If package scripts or commands are needed, create them."
           <label htmlFor="to-avoid">피해야 할 것 / 사용하지 말 것</label>
           <textarea
             id="to-avoid"
-            rows={2}
-            placeholder="예: Redux 사용 금지, 외부 이미지 API 사용 지양..."
+            rows={1}
+            placeholder="예: 외부 이미지 API 사용 금지"
             value={thingsToAvoid}
             onChange={(e) => setThingsToAvoid(e.target.value)}
           ></textarea>
