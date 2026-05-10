@@ -461,6 +461,8 @@ If package scripts or commands are needed, create them."
                 rows={12}
               />
 
+              </section>
+
       <section className="result-section">
         <div className="section-header">
           <h3>SPEC.md</h3>
@@ -490,10 +492,7 @@ If package scripts or commands are needed, create them."
         />
       </section>
 
-
-            </section>
-
-            <section className="result-section">
+          <section className="result-section">
               <div className="section-header">
                 <h3>Gemini CLI 시작 프롬프트</h3>
                 <button className="copy-btn" onClick={() => handleCopy(result.gemini_prompt, setCopyStatusPrompt)}>
