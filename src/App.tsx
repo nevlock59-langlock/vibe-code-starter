@@ -266,6 +266,13 @@ If package scripts or commands are needed, create them."
 
   const handleDownloadAll = () => {
     if (!result) return;
+
+    const ok = window.confirm(
+      '여러 파일을 개별 다운로드합니다. 브라우저에서 여러 파일 다운로드 허용을 물어보면 허용해주세요.'
+    );
+
+    if (!ok) return;
+
     handleDownloadFile(result.readme, 'README.md');
     handleDownloadFile(result.howto, 'HOWTO.md');
     if (result.spec) handleDownloadFile(result.spec, 'SPEC.md');
