@@ -301,23 +301,34 @@ If package scripts or commands are needed, create them."
                 rows={12}
               />
 
-      <div className="output-group">
-        <div className="output-header">
-          <span>SPEC.md</span>
-          <button
-            className="download-btn"
-            onClick={() => handleDownloadFile(result.spec, 'SPEC.md')}
-          >
-            다운로드
-          </button>
+      <section className="result-section">
+        <div className="section-header">
+          <h3>SPEC.md</h3>
+
+          <div className="button-group">
+            <button
+              className="copy-btn"
+              onClick={() => handleCopy(result.spec, setCopyStatusPrompt)}
+            >
+              {copyStatusPrompt}
+            </button>
+
+            <button
+              className="download-btn"
+              onClick={() => handleDownloadFile(result.spec, 'SPEC.md')}
+            >
+              다운로드
+            </button>
+          </div>
         </div>
 
         <textarea
-          className="output-textarea"
+          className="output-area"
           readOnly
           value={result.spec}
+          rows={12}
         />
-      </div>
+      </section>
 
 
             </section>
