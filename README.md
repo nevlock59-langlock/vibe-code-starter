@@ -1,73 +1,104 @@
-# React + TypeScript + Vite
+# Vibe Code Starter
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A lightweight MVP starter kit for vibe coding with AI coding agents such as Claude Code, Gemini CLI, and local/on-prem agents.
 
-Currently, two official plugins are available:
+이 저장소는 AI 코딩 에이전트와 함께 작은 MVP를 빠르게 만들기 위한 스타터킷입니다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## What this is
 
-## React Compiler
+This is not a large framework.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+It is a small starter kit for quickly choosing the right first project shape.
 
-## Expanding the ESLint configuration
+- no-install-html: single-file browser MVP
+- local-tkinter: local PC / on-prem friendly desktop MVP
+- Vite/React: deployable web app MVP
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## MVP Principle
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+MVP does not mean a toy screen.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+MVP means the smallest version where the core user flow works end-to-end.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+A good MVP should let the user:
+
+1. enter or provide something
+2. run one clear action
+3. see a useful result
+4. reset or try again
+
+## Available Templates
+
+### no-install-html
+
+Use this when you want the fastest local MVP.
+
+- No npm install
+- No build step
+- Open index.html directly in a browser
+- Good for quick UI and interaction checks
+
+### local-tkinter
+
+Use this for local PC or on-prem workflows.
+
+- Python-based local GUI
+- Good for internal tools
+- Good for local/on-prem API workflows
+- Do not expose API keys in frontend code
+
+### Vite/React
+
+Use this when the MVP may grow into a deployable web app.
+
+- Requires npm install
+- Good for frontend apps
+- Good for Vercel or web deployment
+
+## Agent Guidance
+
+Before starting a new project, ask:
+
+> Do you want to use this starter kit as the base, or should I adapt the current project structure?
+
+Do not assume this starter kit should always be used.
+
+If the user says yes:
+
+- use this starter kit workflow
+- choose the right template for the target environment
+- keep the first version lightweight but end-to-end usable
+
+If the user says no:
+
+- preserve the existing project structure
+- apply only the MVP principles where helpful
+
+## Security Notes
+
+- Do not hardcode API keys
+- Do not expose secrets in browser-side JavaScript
+- For local or on-prem API calls, prefer environment variables or local config files excluded from Git
+- Keep internal endpoints, app IDs, and credentials out of public repositories
+
+## Quick Start
+
+For no-install HTML:
+
+```text
+open no-install-html/index.html
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+For Vite/React:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
+
+## Conclusion
+
+This starter kit is meant to reduce project-starting friction.
+
+The goal is not to make the smallest possible screen.
+The goal is to create the smallest useful end-to-end flow.
